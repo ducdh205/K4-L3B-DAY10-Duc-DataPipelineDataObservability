@@ -2,7 +2,7 @@
   "backend": "chroma",
   "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
   "embedding_backend": "sentence-transformers",
-  "persist_path": "/mnt/e/AIVin/K4-L3B-DAY10-Duc-DataPipelineDataObservability/data/chroma",
+  "persist_path": "C:\\Users\\52100\\OneDrive\\Document\\VinUniLab_LyThuyet\\Day10\\K4-L3B-DAY10-Duc-DataPipelineDataObservability\\data\\chroma",
   "collection_name": "papers-baseline",
   "documents": [
     {

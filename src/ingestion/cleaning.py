@@ -14,6 +14,15 @@ def _plain_text(value: str) -> str:
     return normalize_whitespace(re.sub(r"<[^>]+>", " ", html.unescape(value or "")))
 
 
+def _clean_text_values(values: list[str]) -> list[str]:
+    cleaned_values = []
+    for value in values:
+        cleaned = _plain_text(value)
+        if cleaned:
+            cleaned_values.append(cleaned)
+    return cleaned_values
+
+
 def build_embedding_text(row: dict) -> str:
     """Create the canonical five-part document representation used for retrieval."""
     return "\n".join(
@@ -31,8 +40,8 @@ def build_clean_dataframe(records: list[PaperRecord], run_date: datetime) -> pd.
     """Normalize raw Crossref records into an embedding-ready, traceable dataframe."""
     rows: list[dict] = []
     for record in records:
-        authors = [_plain_text(author) for author in record.authors if _plain_text(author)]
-        categories = [_plain_text(category) for category in record.categories if _plain_text(category)]
+        authors = _clean_text_values(record.authors)
+        categories = _clean_text_values(record.categories)
         rows.append(
             {
                 "paper_id": normalize_whitespace(record.paper_id).lower(),
@@ -66,5 +75,6 @@ def build_clean_dataframe(records: list[PaperRecord], run_date: datetime) -> pd.
     df["authors_joined"] = df["authors"].map(compact_join)
     df["categories_joined"] = df["categories"].map(compact_join)
     df["summary_chars"] = df["summary"].str.len()
-    df["text_for_embedding"] = df.apply(lambda row: build_embedding_text(row.to_dict()), axis=1)
+    embedding_rows = df[["title", "authors_joined", "categories_joined", "published", "summary"]].to_dict(orient="records")
+    df["text_for_embedding"] = [build_embedding_text(row) for row in embedding_rows]
     return df.sort_values(["published", "paper_id"], ascending=[False, True]).reset_index(drop=True)
