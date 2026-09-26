@@ -116,6 +116,7 @@ class LocalEmbeddingIndex:
             {
                 "backend": "chroma",
                 "embedding_model": settings.embedding_model,
+                "embedding_backend": embedding_model.backend,
                 "persist_path": str(persist_path),
                 "collection_name": collection_name,
                 "documents": documents,

@@ -6,3 +6,9 @@ src/*.egg-info/
 lab/
 **/__pycache__/
 doc_verification_report.md
+.playwright-mcp/
+.playwright-mcp*
+.understand-anything/
+.understand-anything*
+*.deb
+*.orig
